@@ -18,7 +18,7 @@ export const validateOTP = async (req: Request, res: Response, connection: any) 
     logger.info("Formatted phone number:" + formattedPhoneNumber)
 
 
-    const user = await userRepository.findOne({ where: { phoneNumber: formattedPhoneNumber, active: true } });
+    const user = await userRepository.findOne({ where: { phoneNumber: formattedPhoneNumber, active: true }, relations: ["driver"] });
 
     // If no user is found, return an error
     if (!user) {
@@ -32,7 +32,7 @@ export const validateOTP = async (req: Request, res: Response, connection: any) 
             userInternalId: user.InternalId,
             otp: req.body.otp,
             validated: false,
-            active: true  // Assuming the OTPValidation has an active field, similar to the user
+            active: true
         }
     });
 
@@ -48,6 +48,18 @@ export const validateOTP = async (req: Request, res: Response, connection: any) 
     // Save the updated otpValidation entry
     await otpValidationRepository.save(otpValidation);
 
+    const driverResponse = user.driver ? {
+        approved: user.driver.approved,
+        online: user.driver.online
+    } : null;
+    
     // If you reached here, the OTP is valid
-    res.json({ message: "OTP validated successfully.", success: true, user: { id: user.InternalId, firstName: user.firstName, lastName: user.lastName, email: user.email, phone: user.phoneNumber } });
+    res.json({ message: "OTP validated successfully.", success: true, user: { 
+        id: user.InternalId, 
+        firstName: user.firstName, 
+        lastName: user.lastName, 
+        email: user.email, 
+        phone: user.phoneNumber, 
+        driver: driverResponse
+    } });
 }

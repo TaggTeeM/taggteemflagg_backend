@@ -25,7 +25,7 @@ export const getPreferredDrivers = async (req: Request, res: Response, connectio
             .createQueryBuilder("preferredDriver")
             .innerJoinAndSelect("preferredDriver.driver", "driver")
             .innerJoinAndSelect("driver.user", "user")  // assuming driver has a reference to user
-            .where("preferredDriver.userInternalId = :userInternalId", { userInternalId })
+            .where("preferredDriver.user_InternalId = :userInternalId", { userInternalId })
             .getMany();
 
         // Format the result
