@@ -10,6 +10,7 @@ import { validateOTP } from './routes/validateOTP.ts';
 import { signUp } from "./routes/signUp.ts";
 import { getPreferredDrivers } from "./routes/getPreferredDrivers.ts";
 import { driverSignup } from "./routes/driverSignup.ts";
+import { tripCostList } from "./routes/getTripCostList.ts"
 import { ThreeSecondLimiter, TenSecondLimiter } from "./middleware/rateLimiter.ts";
 
 const app = express();
@@ -24,6 +25,7 @@ createConnection().then(async connection => {
   app.post('/api/driver-signup', async (req, res) => driverSignup(req, res, connection));
 
   app.post('/api/get-preferred-drivers', async (req, res) => getPreferredDrivers(req, res, connection));
+  app.post('/api/trip-cost-list', async (req, res) => tripCostList(req, res, connection));
 
   app.listen(3000, () => console.log('Server running on port 3000'));
 
