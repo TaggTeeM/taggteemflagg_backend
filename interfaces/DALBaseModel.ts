@@ -12,14 +12,14 @@ export abstract class DALBaseModel extends BaseEntity {
   } })
   active: boolean;
 
-  @Column({ type: 'varchar', length: 45, nullable: true, default: null })
+  @Column({ name: "InternalId", type: 'varchar', length: 45, nullable: true, default: null })
   InternalId: string;
 
-  @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)' })
-  create_date: Date;
+  @CreateDateColumn({ name: 'create_date', type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)' })
+  createDate: Date;
 
-  @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)', onUpdate: 'CURRENT_TIMESTAMP(6)' })
-  last_updated: Date;
+  @UpdateDateColumn({ name: 'last_updated', type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)', onUpdate: 'CURRENT_TIMESTAMP(6)' })
+  lastUpdated: Date;
 
   constructor() {
     super();  // Call the parent constructor
