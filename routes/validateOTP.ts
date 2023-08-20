@@ -1,11 +1,12 @@
 import { Request, Response } from 'express';
+import { DataSource } from 'typeorm';
 
 import { User } from '../entities/User.ts';  // Import the User entity
 import logger from "../middleware/logger.ts"
 import { OTPValidation } from '../entities/OTPValidation.ts';
 import { formatPhoneNumber } from '../middleware/formatters.ts';
 
-export const validateOTP = async (req: Request, res: Response, connection: any) => {
+export const validateOTP = async (req: Request, res: Response, connection: DataSource) => {
     logger.info("Validating OTP");
 
     // First, find the user with the provided phone number
@@ -17,8 +18,7 @@ export const validateOTP = async (req: Request, res: Response, connection: any) 
         
     logger.info("Formatted phone number:" + formattedPhoneNumber)
 
-
-    const user = await userRepository.findOne({ where: { phoneNumber: formattedPhoneNumber, active: true }, relations: ["driver"] });
+    const user = await userRepository.findOne({ where: { phoneNumber: formattedPhoneNumber as string, active: true }, relations: { driver: true } });
 
     // If no user is found, return an error
     if (!user) {
@@ -47,11 +47,6 @@ export const validateOTP = async (req: Request, res: Response, connection: any) 
 
     // Save the updated otpValidation entry
     await otpValidationRepository.save(otpValidation);
-
-    const driverResponse = user.driver ? {
-        approved: user.driver.approved,
-        online: user.driver.online
-    } : null;
     
     // If you reached here, the OTP is valid
     res.json({ message: "OTP validated successfully.", success: true, user: { 
@@ -60,6 +55,8 @@ export const validateOTP = async (req: Request, res: Response, connection: any) 
         lastName: user.lastName, 
         email: user.email, 
         phone: user.phoneNumber, 
-        driver: driverResponse
+        driver: user.driver 
+            ? { approved: user.driver.approved, online: user.driver.online } 
+            : null
     } });
 }

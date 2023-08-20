@@ -6,6 +6,7 @@ import { Driver } from './Driver.ts';
 
 @Entity({ name: "users" })
 @Unique(["phoneNumber"]) // Adding a unique constraint on phone_number
+@Unique(["email"]) // Adding a unique constraint on email
 export class User extends DALBaseModel {
     @Column({ name: 'first_name', type: 'varchar', length: 255, nullable: true })
     firstName: string;

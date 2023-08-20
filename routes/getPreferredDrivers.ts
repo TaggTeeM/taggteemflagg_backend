@@ -2,8 +2,9 @@ import { Request, Response } from 'express';
 
 import { PreferredDriver } from '../entities/PreferredDriver.ts';
 import logger from "../middleware/logger.ts"; // Adjust the path accordingly
+import { DataSource } from 'typeorm';
 
-export const getPreferredDrivers = async (req: Request, res: Response, connection: any) => {
+export const getPreferredDrivers = async (req: Request, res: Response, connection: DataSource) => {
     try {
         const { userInternalId } = req.body;
 

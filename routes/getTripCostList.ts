@@ -2,11 +2,14 @@ import { Client, TravelMode, UnitSystem } from "@googlemaps/google-maps-services
 import { Request, Response } from 'express';
 
 import { MapCoordinate } from "../entities/MapCoordinate.ts";
+import { DataSource } from "typeorm";
 
 const client = new Client({});
 
-export const tripCostList = async (req: Request, res: Response, connection: any) => {
+export const tripCostList = async (req: Request, res: Response, connection: DataSource) => {
     const { source, destination}: { source: MapCoordinate, destination: MapCoordinate } = req.body;
+
+    console.log("Calling getTripCostLists.tripCostList");
 
     try {
         const response = await client.directions({
@@ -20,9 +23,16 @@ export const tripCostList = async (req: Request, res: Response, connection: any)
         });
 
         const totalDistanceInMeters = response.data.routes[0].legs[0].distance.value;
-        const totalDistanceInFeet = totalDistanceInMeters * 3.281; // Convert meters to feet
 
+        /*
+        const totalDistanceInFeet = totalDistanceInMeters * 3.281; // Convert meters to feet
         const standardCost = (totalDistanceInFeet * 2) / 100;
+        */
+        const totalDistanceInMiles = totalDistanceInMeters / 1609.34; // Convert meters to miles
+
+        //TODO: make the "1" below a variable that is configurable from the admin back end
+        const standardCost = totalDistanceInMiles * 1; // charge $1 per mile
+
         const costList = [
             standardCost,
             standardCost * 0.85,

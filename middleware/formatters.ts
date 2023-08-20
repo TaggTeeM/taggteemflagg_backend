@@ -1,8 +1,11 @@
 import logger from "../middleware/logger.ts"
 
-export const formatPhoneNumber = (input: string): string | null => {
+export const formatPhoneNumber = (input: string | null): string | null => {
     logger.info("Formatting phone number");
     //logger.info("Input:" + input);
+
+    if (input == null)
+        return null;
 
     // Remove all non-numeric characters from the input
     const cleaned = input.replace(/\D/g, '');

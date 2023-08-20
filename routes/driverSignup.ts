@@ -2,8 +2,9 @@ import { Request, Response } from 'express';
 
 import { Driver } from '../entities/Driver.ts'; // Adjust the path accordingly
 import logger from "../middleware/logger.ts"; // Adjust the path accordingly
+import { DataSource } from 'typeorm';
 
-export const driverSignup = async (req: Request, res: Response, connection: any) => {
+export const driverSignup = async (req: Request, res: Response, connection: DataSource) => {
     try {
         // Extract userInternalId from request body
         const userInternalId = req.body.userInternalId;
