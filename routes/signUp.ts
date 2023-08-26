@@ -16,7 +16,7 @@ export const signUp = async (req: Request, res: Response, connection: DataSource
     return res.status(400).json({ message: "Phone number is required.", success: false });
   }
 
-  const phoneNumber = formatPhoneNumber(req.body.phone);
+  const [countryCode, phoneNumber] = formatPhoneNumber(req.body.phone);
   logger.info(`phoneNumber: ${phoneNumber}`);
 
   if (!phoneNumber) {
@@ -64,6 +64,7 @@ export const signUp = async (req: Request, res: Response, connection: DataSource
   newUser.email = email;
   newUser.firstName = firstName;
   newUser.lastName = lastName;
+  newUser.locked = true;
 
   try {
     const savedUser = await userRepository.save(newUser);
@@ -90,7 +91,7 @@ export const signUp = async (req: Request, res: Response, connection: DataSource
         storeAndSendOtp(connection, user!, OTPType.EMAIL)
         .then((code) => {
           logger.info("Successfully sent email OTP")
-          return res.status(201).json({ message: "Rider successfully signed up, OTPs sent.", success: true });
+          return res.status(201).json({ message: "Rider successfully signed up, OTPs sent.", success: true, phone: user?.phoneNumber, email: user?.email });
         })
         .catch((error) => {
           if (error instanceof Error)

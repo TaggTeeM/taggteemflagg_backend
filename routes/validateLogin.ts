@@ -6,7 +6,6 @@ import logger from "../middleware/logger.ts"
 import { checkLoginType, isEmail } from '../middleware/validators.ts';
 import { storeAndSendOtp } from '../middleware/oneTimePasswords.ts';
 import { OTPType } from '../entities/OTPValidation.ts';
-import { User } from '../entities/User.ts';
 
 export const validateLogin = async (req: Request, res: Response, connection: DataSource) => {
     logger.info("Validating login");

@@ -41,9 +41,24 @@ export class User extends DALBaseModel {
     @Column({ name: 'failed_attempts', type: 'int', default: 0 }) // Defaults to 0
     failedAttempts: number;
 
-    @Column({ name: 'locked', type: 'tinyint', width: 1, default: 0 }) // 1 for true/locked, 0 for false/unlocked
-    locked: number; // Consider using boolean if your DB supports it
+    @Column({ name: 'locked', type: 'tinyint', width: 1, default: 1, transformer: {
+        from: value => !!value, // convert to boolean when selecting data
+        to: value => value ? 1 : 0 // convert to tinyint when saving
+    }}) 
+    locked: boolean;
 
+    @Column({ name: 'phone_validated', type: 'tinyint', width: 1, default: 0, transformer: {
+        from: value => !!value, // convert to boolean when selecting data
+        to: value => value ? 1 : 0 // convert to tinyint when saving
+    }}) 
+    phoneValidated: boolean;
+
+    @Column({ name: 'email_validated', type: 'tinyint', width: 1, default: 0, transformer: {
+        from: value => !!value, // convert to boolean when selecting data
+        to: value => value ? 1 : 0 // convert to tinyint when saving
+    }}) 
+    emailValidated: boolean;
+    
     @OneToOne("Driver", (driver: Driver) => driver.user, { nullable: true }) // Setting up a one-to-one relationship with Driver
     driver: Driver | null; // The type here can be Driver or null since it allows nulls
 

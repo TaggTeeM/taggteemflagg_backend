@@ -1,4 +1,5 @@
 import dotenv from 'dotenv';
+
 dotenv.config();
 console.log(process.env);
 
@@ -43,19 +44,4 @@ OrmConnectionSource
 
         return null;
   });
-/*
-createConnection().then(async connection => {
 
-  app.post('/api/validate-phone', ThreeSecondLimiter, async (req, res) => validateLogin(req, res, connection));
-  app.post('/api/validate-otp', async (req, res) => validateOTP(req, res, connection));
-
-  app.post("/api/sign-up", TenSecondLimiter, async (req, res) => signUp(req, res, connection));
-  app.post('/api/driver-signup', async (req, res) => driverSignup(req, res, connection));
-
-  app.post('/api/get-preferred-drivers', async (req, res) => getPreferredDrivers(req, res, connection));
-  app.post('/api/trip-cost-list', async (req, res) => tripCostList(req, res, connection));
-
-  app.listen(3000, () => console.log('Server running on port 3000'));
-
-}).catch(error => console.log(error));
-*/

@@ -12,7 +12,7 @@ export const isEmail = (email: string): boolean => {
     return re.test(String(email).toLowerCase());
 }
 
-export const checkLoginType = async (connection: any, login: string | null, loginType: OTPType): Promise<User | null> => {
+export const checkLoginType = async (connection: any, login: string | null, loginType: OTPType, driverRelation?: boolean): Promise<User | null> => {
     try {
         logger.info(`Validating login:`, loginType);
 
@@ -24,8 +24,10 @@ export const checkLoginType = async (connection: any, login: string | null, logi
         logger.info("Login:", login)
 
         if (loginType == OTPType.PHONE) {
+            let countryCode;
+            
             // manipulate the req.body.number to be formatted as a standard Flagg phone number string, then look it up in the users table (not the phone number table as is below)
-            login = formatPhoneNumber(login);
+            [countryCode, login] = formatPhoneNumber(login);
             
             logger.info("Formatted phone number:", login)
             
@@ -36,16 +38,15 @@ export const checkLoginType = async (connection: any, login: string | null, logi
         }
         
         const userRepository = connection.getRepository(User);
-
         const userOptions = loginType == OTPType.EMAIL ? {email: login} : {phoneNumber: login};
-        const user = await userRepository.findOne({ where: userOptions });
-
-        logger.info("User exists?", Boolean(user));
+        const user = await userRepository.findOne({ where: { ...userOptions, active: true, locked: false }, relations: { driver: driverRelation } });
 
         if (!user) {
             logger.error("No user found with this login");
             return null;
         }
+        
+        logger.info("User found");
 
         return user;
     } catch (error) {

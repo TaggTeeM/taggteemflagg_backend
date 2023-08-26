@@ -3,27 +3,39 @@ import { DataSource } from 'typeorm';
 
 import { User } from '../entities/User.ts';  // Import the User entity
 import logger from "../middleware/logger.ts"
-import { OTPValidation } from '../entities/OTPValidation.ts';
-import { formatPhoneNumber } from '../middleware/formatters.ts';
+import { OTPType, OTPValidation } from '../entities/OTPValidation.ts';
+import { checkLoginType, isEmail } from '../middleware/validators.ts';
 
 export const validateOTP = async (req: Request, res: Response, connection: DataSource) => {
     logger.info("Validating OTP");
 
+    const isEmailInput = isEmail(req.body.phone);
+
     // First, find the user with the provided phone number
-    const userRepository = connection.getRepository(User);
+    const validationType: OTPType = isEmailInput ? OTPType.EMAIL : OTPType.PHONE;
 
-    //logger.info("Formatting phone number");
+    // get login from "req.body.phone" and see if it's a phone number or email, and get the user if they exist
+    const user : User | null = await checkLoginType(connection, req.body.phone, validationType);
 
-    const formattedPhoneNumber = formatPhoneNumber(req.body.phone);
-        
-    logger.info("Formatted phone number:" + formattedPhoneNumber)
-
-    const user = await userRepository.findOne({ where: { phoneNumber: formattedPhoneNumber as string, active: true }, relations: { driver: true } });
-
-    // If no user is found, return an error
     if (!user) {
-        return res.status(404).json({ message: "User not found.", success: false });
+        return res.status(400).json({ message: "Rider not found.", success: false });
     }
+
+    if (isEmailInput) {
+        user.emailValidated = true;
+
+        if (user.phoneValidated && user.locked) {
+            user.locked = false;
+        }
+    } else {
+        user.phoneValidated = true;
+
+        if (user.emailValidated && user.locked) {
+            user.locked = false;
+        }
+    }
+
+    await connection.getRepository(User).save(user);
 
     // Next, find the OTPValidation using the InternalId of the user and the provided OTP
     const otpValidationRepository = connection.getRepository(OTPValidation);
@@ -31,6 +43,7 @@ export const validateOTP = async (req: Request, res: Response, connection: DataS
         where: {
             userInternalId: user.InternalId,
             otp: req.body.otp,
+            otpType: validationType,
             validated: false,
             active: true
         }

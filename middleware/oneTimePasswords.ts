@@ -27,7 +27,7 @@ export const storeAndSendOtp = async (connection: DataSource, user: User, valida
             .createQueryBuilder()
             .update(OTPValidation)
             .set({ active: false })
-            .where("user_InternalId = :number", { number: user.InternalId })
+            .where("user_InternalId = :number and otp_type = :otpType", { number: user.InternalId, otpType: validationType })
             .execute();
 
         // Add a new row with the formatted phone number and 6 digit code

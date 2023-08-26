@@ -1,6 +1,28 @@
 import logger from "../middleware/logger.ts"
+import pkg from 'google-libphonenumber';
+const { PhoneNumberFormat, PhoneNumberUtil } = pkg;
 
-export const formatPhoneNumber = (input: string | null): string | null => {
+export const formatPhoneNumber = (number: string): [string | null, string | null] => {
+    const phoneUtil = PhoneNumberUtil.getInstance();
+
+    try {
+        const parsedNumber = phoneUtil.parseAndKeepRawInput(number);
+
+        if (parsedNumber == null)
+            return [null, null];
+        
+        // first try formatting in national format, then international
+        //if (parsedNumber.getCountryCode() == 1)
+            //return phoneUtil.format(parsedNumber, PhoneNumberFormat.NATIONAL);
+        //else
+            return [`+${parsedNumber.getCountryCode()}`, phoneUtil.format(parsedNumber, PhoneNumberFormat.INTERNATIONAL)];
+    } catch (error) {
+        console.error('Invalid number:', error);
+        return [null, null]; // or handle the error in some other way
+    }
+};
+
+export const formatPhoneNumberOLD = (input: string | null): string | null => {
     logger.info("Formatting phone number");
     //logger.info("Input:" + input);
 
@@ -36,6 +58,9 @@ export const formatPhoneNumber = (input: string | null): string | null => {
     if (cleaned.length === 10) {
         return `+1${cleaned}`;
     } 
+
+    if (input[0] == '+')
+        return `+${cleaned}`;
     
     return cleaned;  // return null or a custom message for invalid numbers
 }
