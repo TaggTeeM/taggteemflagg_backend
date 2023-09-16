@@ -15,6 +15,7 @@ import { ThreeSecondLimiter, TenSecondLimiter } from "./middleware/rateLimiter.t
 import logger from './middleware/logger.ts';
 import { OrmConnectionSource } from './middleware/ormConnectionSource.ts';
 import confirmBooking from './routes/confirmBooking.ts';
+import { authenticateJWT } from './middleware/authenticateJWT.ts';
 
 const app = express();
 app.use(express.json());
@@ -27,12 +28,12 @@ OrmConnectionSource
     app.post('/api/validate-otp', async (req, res) => validateOTP(req, res, OrmConnectionSource));
   
     app.post("/api/sign-up", TenSecondLimiter, async (req, res) => signUp(req, res, OrmConnectionSource));
-    app.post('/api/driver-signup', async (req, res) => driverSignup(req, res, OrmConnectionSource));
+    app.post('/api/driver-signup', authenticateJWT, async (req, res) => driverSignup(req, res, OrmConnectionSource));
   
-    app.post('/api/get-preferred-drivers', async (req, res) => getPreferredDrivers(req, res, OrmConnectionSource));
-    app.post('/api/trip-cost-list', async (req, res) => tripCostList(req, res, OrmConnectionSource));
+    app.post('/api/get-preferred-drivers', authenticateJWT, async (req, res) => getPreferredDrivers(req, res, OrmConnectionSource));
+    app.post('/api/trip-cost-list', authenticateJWT, async (req, res) => tripCostList(req, res, OrmConnectionSource));
 
-    app.post('/api/booking/confirm-booking', async (req, res) => confirmBooking(req, res, OrmConnectionSource));
+    app.post('/api/booking/confirm-booking', authenticateJWT, async (req, res) => confirmBooking(req, res, OrmConnectionSource));
   
     app.listen(3000, () => console.log('Server running on port 3000'));
   })

@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { DataSource, MoreThan } from 'typeorm';
+import jwt from 'jsonwebtoken';
 
 import { User } from '../entities/User.ts';  // Import the User entity
 import logger from "../middleware/logger.ts"
@@ -23,33 +24,7 @@ export const validateOTP = async (req: Request, res: Response, connection: DataS
         return res.status(400).json({ message: "Rider not found.", success: false });
     }
 
-    logger.info(`Validating OTP for user: ${JSON.stringify(user)}`);
-
-    if (isEmailInput) {
-        logger.info(`Email OTP validated`);
-
-        user.emailValidated = true;
-
-        if (user.phoneValidated && user.locked) {
-            user.locked = false;
-            
-            logger.info(`Unlocking user`);
-        }
-    } else {
-        logger.info(`Phone OTP validated`);
-
-        user.phoneValidated = true;
-
-        if (user.emailValidated && user.locked) {
-            user.locked = false;
-            
-            logger.info(`Unlocking user`);
-        }
-    }
-
-    logger.info(`Saving user`);
-
-    await connection.getRepository(User).save(user);
+    logger.info(`Validating ${(isEmailInput ? "Email" : "Phone")} OTP for user: ${JSON.stringify(user)}`);
 
     // Calculate the timestamp 15 minutes in the past
     const dateThreshold = new Date();
@@ -79,9 +54,42 @@ export const validateOTP = async (req: Request, res: Response, connection: DataS
 
     // Save the updated otpValidation entry
     await otpValidationRepository.save(otpValidation);
+
+    // set user unlocking if need be
+    if (!user.emailValidated || !user.phoneValidated) {
+        if (isEmailInput) {
+            logger.info(`Setting email validation`);
+
+            user.emailValidated = true;
+
+            if (user.phoneValidated && user.locked) {
+                user.locked = false;
+                
+                logger.info(`Unlocking user`);
+            }
+        } else {
+            logger.info(`Setting phone validation`);
+
+            user.phoneValidated = true;
+
+            if (user.emailValidated && user.locked) {
+                user.locked = false;
+                
+                logger.info(`Unlocking user`);
+            }
+        }
+
+        logger.info(`Saving user`);
+
+        await connection.getRepository(User).save(user);
+    }
+
+    const accessToken = jwt.sign({ phoneNumber: user.phoneNumber }, 'yourSecretKey', { expiresIn: '1h' });
+
+    logger.info(`Created access token [${JSON.stringify(accessToken)}]`)
     
     // If you reached here, the OTP is valid
-    res.json({ message: "OTP validated successfully.", success: true, user: { 
+    res.json({ message: "OTP validated successfully.", accessToken: accessToken, success: true, user: { 
         id: user.InternalId, 
         firstName: user.firstName, 
         lastName: user.lastName, 
