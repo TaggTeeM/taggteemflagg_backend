@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { DataSource } from 'typeorm';
+import { DataSource, MoreThan } from 'typeorm';
 
 import { User } from '../entities/User.ts';  // Import the User entity
 import logger from "../middleware/logger.ts"
@@ -8,6 +8,8 @@ import { checkLoginType, isEmail } from '../middleware/validators.ts';
 
 export const validateOTP = async (req: Request, res: Response, connection: DataSource) => {
     logger.info("Validating OTP");
+
+    const OTP_TIMEOUT_MINUTES = 15;
 
     const isEmailInput = isEmail(req.body.phone);
 
@@ -49,6 +51,10 @@ export const validateOTP = async (req: Request, res: Response, connection: DataS
 
     await connection.getRepository(User).save(user);
 
+    // Calculate the timestamp 15 minutes in the past
+    const dateThreshold = new Date();
+    dateThreshold.setMinutes(dateThreshold.getMinutes() - OTP_TIMEOUT_MINUTES);
+
     // Next, find the OTPValidation using the InternalId of the user and the provided OTP
     const otpValidationRepository = connection.getRepository(OTPValidation);
     const otpValidation = await otpValidationRepository.findOne({
@@ -57,7 +63,8 @@ export const validateOTP = async (req: Request, res: Response, connection: DataS
             otp: req.body.otp,
             otpType: validationType,
             validated: false,
-            active: true
+            active: true,
+            createDate: MoreThan(dateThreshold)
         }
     });
 
