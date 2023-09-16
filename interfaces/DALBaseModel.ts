@@ -12,7 +12,7 @@ export abstract class DALBaseModel extends BaseEntity {
   } })
   active: boolean;
 
-  @Column({ name: "InternalId", type: 'varchar', length: 45, nullable: true, default: null })
+  @Column({ name: "InternalId", type: 'varchar', length: 45, nullable: false, default: () => "(uuid())" })
   InternalId: string;
 
   @CreateDateColumn({ name: 'create_date', type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)' })

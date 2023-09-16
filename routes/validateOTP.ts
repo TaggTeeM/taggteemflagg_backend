@@ -15,25 +15,37 @@ export const validateOTP = async (req: Request, res: Response, connection: DataS
     const validationType: OTPType = isEmailInput ? OTPType.EMAIL : OTPType.PHONE;
 
     // get login from "req.body.phone" and see if it's a phone number or email, and get the user if they exist
-    const user : User | null = await checkLoginType(connection, req.body.phone, validationType);
+    const user : User | null = await checkLoginType(connection, req.body.phone, validationType, undefined, false);
 
     if (!user) {
         return res.status(400).json({ message: "Rider not found.", success: false });
     }
 
+    logger.info(`Validating OTP for user: ${JSON.stringify(user)}`);
+
     if (isEmailInput) {
+        logger.info(`Email OTP validated`);
+
         user.emailValidated = true;
 
         if (user.phoneValidated && user.locked) {
             user.locked = false;
+            
+            logger.info(`Unlocking user`);
         }
     } else {
+        logger.info(`Phone OTP validated`);
+
         user.phoneValidated = true;
 
         if (user.emailValidated && user.locked) {
             user.locked = false;
+            
+            logger.info(`Unlocking user`);
         }
     }
+
+    logger.info(`Saving user`);
 
     await connection.getRepository(User).save(user);
 

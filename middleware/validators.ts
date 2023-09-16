@@ -12,34 +12,43 @@ export const isEmail = (email: string): boolean => {
     return re.test(String(email).toLowerCase());
 }
 
-export const checkLoginType = async (connection: any, login: string | null, loginType: OTPType, driverRelation?: boolean): Promise<User | null> => {
+export const checkLoginType = async (connection: any, login: string | null, loginType: OTPType, driverRelation?: boolean, isLocked?: boolean): Promise<User | null> => {
     try {
-        logger.info(`Validating login:`, loginType);
+        logger.info(`Validating login: ${loginType}`);
 
         if (!login) {
-            logger.error("No login provided", login);
+            logger.error(`No login provided ${login}`);
             return null;
         }
         
-        logger.info("Login:", login)
+        logger.info(`Login: ${login}`)
 
         if (loginType == OTPType.PHONE) {
             let countryCode;
-            
+
             // manipulate the req.body.number to be formatted as a standard Flagg phone number string, then look it up in the users table (not the phone number table as is below)
             [countryCode, login] = formatPhoneNumber(login);
             
-            logger.info("Formatted phone number:", login)
+            logger.info(`Formatted phone number: ${login}`)
             
             if (!login) {
-                logger.error("Failed to format phone number", login);
+                logger.error(`Failed to format phone number`);
                 return null;
             }
         }
         
         const userRepository = connection.getRepository(User);
         const userOptions = loginType == OTPType.EMAIL ? {email: login} : {phoneNumber: login};
-        const user = await userRepository.findOne({ where: { ...userOptions, active: true, locked: false }, relations: { driver: driverRelation } });
+        const user = await userRepository.findOne({ 
+            where: { 
+                ...userOptions, 
+                active: true, 
+                locked: typeof isLocked !== 'undefined' ? isLocked : false
+            }, 
+            relations: { 
+                driver: typeof driverRelation !== 'undefined' ? driverRelation : false 
+            } 
+        });
 
         if (!user) {
             logger.error("No user found with this login");

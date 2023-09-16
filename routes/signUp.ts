@@ -71,16 +71,16 @@ export const signUp = async (req: Request, res: Response, connection: DataSource
 
     logger.info("savedUser:", savedUser);
 
-    let user = await checkLoginType(connection, newUser.phoneNumber, OTPType.PHONE);
+    let user = await checkLoginType(connection, newUser.phoneNumber, OTPType.PHONE, undefined, true);
 
     if (!user) {
-        return res.status(400).json({ message: "Invalid phone number.", success: false });
+        return res.status(400).json({ message: "Phone number error", success: false });
     }
 
-    user = await checkLoginType(connection, newUser.email, OTPType.EMAIL);
+    user = await checkLoginType(connection, newUser.email, OTPType.EMAIL, undefined, true);
 
     if (!user) {
-        return res.status(400).json({ message: "Invalid email.", success: false });
+        return res.status(400).json({ message: "Email address error", success: false });
     }
     
     // send both phone and email OTPs

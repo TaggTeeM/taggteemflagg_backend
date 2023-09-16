@@ -14,6 +14,7 @@ import { tripCostList } from "./routes/getTripCostList.ts"
 import { ThreeSecondLimiter, TenSecondLimiter } from "./middleware/rateLimiter.ts";
 import logger from './middleware/logger.ts';
 import { OrmConnectionSource } from './middleware/ormConnectionSource.ts';
+import confirmBooking from './routes/confirmBooking.ts';
 
 const app = express();
 app.use(express.json());
@@ -30,6 +31,8 @@ OrmConnectionSource
   
     app.post('/api/get-preferred-drivers', async (req, res) => getPreferredDrivers(req, res, OrmConnectionSource));
     app.post('/api/trip-cost-list', async (req, res) => tripCostList(req, res, OrmConnectionSource));
+
+    app.post('/api/booking/confirm-booking', async (req, res) => confirmBooking(req, res, OrmConnectionSource));
   
     app.listen(3000, () => console.log('Server running on port 3000'));
   })

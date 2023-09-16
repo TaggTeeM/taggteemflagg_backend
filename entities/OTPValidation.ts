@@ -1,5 +1,6 @@
 import { DALBaseModel } from '../interfaces/DALBaseModel.ts';
-import { Entity, Column, Index } from 'typeorm';
+import { Entity, Column, Index, ManyToOne, JoinColumn, Relation } from 'typeorm';
+import { User } from './User.ts';
 
 export enum OTPType {
   PHONE = "phone",
@@ -24,4 +25,8 @@ export class OTPValidation extends DALBaseModel {
     to: value => value ? 1 : 0 // convert to tinyint when saving
   } }) 
   validated: boolean; // 1 for true/locked, 0 for false/unlocked
+
+  @ManyToOne("User", (user: User) => user.otpValidations)
+  @JoinColumn({ name: "user_InternalId", referencedColumnName: "InternalId" })
+  user: Relation<User>;
 }

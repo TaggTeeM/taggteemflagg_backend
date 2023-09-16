@@ -3,6 +3,8 @@ import { Entity, Column, Unique, OneToMany, OneToOne } from 'typeorm';
 import { DALBaseModel } from '../interfaces/DALBaseModel.ts';
 import { PreferredDriver } from "./PreferredDriver.ts";
 import { Driver } from './Driver.ts';
+import { ConfirmedBooking } from './ConfirmedBooking.ts';
+import { OTPValidation } from './OTPValidation.ts';
 
 @Entity({ name: "users" })
 @Unique(["phoneNumber"]) // Adding a unique constraint on phone_number
@@ -64,4 +66,10 @@ export class User extends DALBaseModel {
 
     @OneToMany(() => PreferredDriver, preferredDriver => preferredDriver.user)
     preferredDrivers: PreferredDriver[];
+
+    @OneToMany(() => ConfirmedBooking, confirmedBooking => confirmedBooking.user)
+    confirmedBookings: ConfirmedBooking[];
+
+    @OneToMany(() => OTPValidation, otpValidation => otpValidation.user)
+    otpValidations: OTPValidation[];
 }
