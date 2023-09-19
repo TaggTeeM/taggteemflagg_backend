@@ -1,0 +1,18 @@
+{
+    "type": "mysql",
+    "host": "localhost",
+    "port": 3307,
+    "username": "replicator_new",
+    "password": "Iw48h48$",
+    "database": "flagg_app",
+    "synchronize": true,
+    "logging": true,
+    "entities": [
+       "entities/**/*.ts",
+       "entities/**/*.js"
+    ],
+    "migrations": [
+        "migrations/**/*.ts"
+     ]
+  }
+  
