@@ -7,7 +7,7 @@ import { MapCoordinate } from "../entities/MapCoordinate.js";
 const client = new Client({});
 
 export const tripCostList = async (req: Request, res: Response, connection: DataSource) => {
-    const { source, destination}: { source: MapCoordinate, destination: MapCoordinate } = req.body;
+    const { source, destination }: { source: MapCoordinate, destination: MapCoordinate } = req.body;
 
     console.log("Calling getTripCostLists.tripCostList");
 
@@ -21,6 +21,10 @@ export const tripCostList = async (req: Request, res: Response, connection: Data
                 key: process.env.GOOGLE_MAPS_API_KEY || ""
             }
         });
+
+        if (response.data.routes.length === 0) {
+            return res.status(500).json({ message: "No routes found.", success: false });
+        }
 
         const totalDistanceInMeters = response.data.routes[0].legs[0].distance.value;
 

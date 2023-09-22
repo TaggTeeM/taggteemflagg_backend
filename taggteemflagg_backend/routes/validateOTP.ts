@@ -7,6 +7,8 @@ import logger from "../middleware/logger.js"
 import { OTPType, OTPValidation } from '../entities/OTPValidation.js';
 import { checkLoginType, isEmail } from '../middleware/validators.js';
 
+import { JWT_SECRET } from '../config/secrets.js';
+
 export const validateOTP = async (req: Request, res: Response, connection: DataSource) => {
     logger.info("Validating OTP");
 
@@ -84,7 +86,7 @@ export const validateOTP = async (req: Request, res: Response, connection: DataS
         await connection.getRepository(User).save(user);
     }
 
-    const accessToken = jwt.sign({ phoneNumber: user.phoneNumber }, 'yourSecretKey', { expiresIn: '1h' });
+    const accessToken = jwt.sign({ phoneNumber: user.phoneNumber }, JWT_SECRET, { expiresIn: '1h' });
 
     logger.info(`Created access token [${JSON.stringify(accessToken)}]`)
     

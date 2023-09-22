@@ -15,10 +15,10 @@ export class Booking extends DALBaseModel {
     @Column({ name: "destination_coordinate_InternalId", type: "varchar", length: 45, unique: false, nullable: false })
     destinationCoordinateInternalId: string | null;
 
-    @Column({ name: "preferred_driver_InternalId", type: "varchar", length: 45, unique: false, nullable: false })
+    @Column({ name: "preferred_driver_InternalId", type: "varchar", length: 45, unique: false, nullable: true })
     preferredDriverInternalId: string | null;
 
-    @Column({ name: "trip_tier", type: "int", nullable: false })
+    @Column({ name: "trip_tier", type: "int", nullable: false, default: -1 })
     tripTier: number;
 
     @Column({ name: "cost", type: "decimal", precision: 18, scale: 9, nullable: true })
@@ -37,14 +37,14 @@ export class Booking extends DALBaseModel {
 
     @ManyToOne("MapCoordinate", (mapCoordinate: MapCoordinate) => mapCoordinate.InternalId)
     @JoinColumn({ name: "source_coordinate_InternalId", referencedColumnName: "InternalId" })
-    sourceCoordinate: MapCoordinate;
+    sourceCoordinate: MapCoordinate | null;
 
     @ManyToOne("MapCoordinate", (mapCoordinate: MapCoordinate) => mapCoordinate.InternalId)
     @JoinColumn({ name: "destination_coordinate_InternalId", referencedColumnName: "InternalId" })
-    destinationCoordinate: MapCoordinate;
+    destinationCoordinate: MapCoordinate | null;
 
     @ManyToOne("PreferredDriver", (preferredDriver: PreferredDriver) => preferredDriver.InternalId)
     @JoinColumn({ name: "preferred_driver_InternalId", referencedColumnName: "InternalId" })
-    preferredDriver: PreferredDriver;
+    preferredDriver: PreferredDriver | null;
 }
   

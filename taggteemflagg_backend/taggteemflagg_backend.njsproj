@@ -36,11 +36,9 @@
   <ItemGroup>
     <Content Include="index.ts" />
     <Content Include=".env" />
-    <Content Include=".gitignore" />
     <Content Include="config\ormconfig.json" />
     <Content Include="migrations\1692541893184-MigrateTriggers.ts.OLD" />
     <Content Include="package.json" />
-    <Content Include="README.md" />
     <Content Include="tsconfig.json" />
   </ItemGroup>
   <ItemGroup>
@@ -52,7 +50,7 @@
     <Folder Include="routes\" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="app.ts" />
+    <TypeScriptCompile Include="config\secrets.ts" />
     <TypeScriptCompile Include="entities\Booking.ts" />
     <TypeScriptCompile Include="entities\ConfirmedBooking.ts" />
     <TypeScriptCompile Include="entities\Driver.ts" />
@@ -70,7 +68,7 @@
     <TypeScriptCompile Include="middleware\ormConnectionSource.ts" />
     <TypeScriptCompile Include="middleware\rateLimiter.ts" />
     <TypeScriptCompile Include="middleware\validators.ts" />
-    <TypeScriptCompile Include="routes\confirmAccessToken.ts" />
+    <TypeScriptCompile Include="routes\authenticateToken.ts" />
     <TypeScriptCompile Include="routes\confirmBooking.ts" />
     <TypeScriptCompile Include="routes\driverSignup.ts" />
     <TypeScriptCompile Include="routes\getPreferredDrivers.ts" />
