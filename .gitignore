@@ -201,3 +201,24 @@ dist
 
 bin/
 obj/
+
+**/*.js
+**/*.js.map
+/taggteemflagg_backend/routes/validateOTP.js.map
+/taggteemflagg_backend/routes/validateOTP.js
+/taggteemflagg_backend/routes/getTripCostList.js.map
+/taggteemflagg_backend/routes/getTripCostList.js
+/taggteemflagg_backend/routes/confirmBooking.js.map
+/taggteemflagg_backend/routes/confirmBooking.js
+/taggteemflagg_backend/middleware/authenticateJWT.js.map
+/taggteemflagg_backend/middleware/authenticateJWT.js
+/taggteemflagg_backend/interfaces/DALBaseModel.js.map
+/taggteemflagg_backend/interfaces/DALBaseModel.js
+/taggteemflagg_backend/index.js.map
+/taggteemflagg_backend/index.js
+/taggteemflagg_backend/entities/MapCoordinate.js.map
+/taggteemflagg_backend/entities/MapCoordinate.js
+/taggteemflagg_backend/entities/ConfirmedBooking.js.map
+/taggteemflagg_backend/entities/ConfirmedBooking.js
+/taggteemflagg_backend/entities/Booking.js.map
+/taggteemflagg_backend/entities/Booking.js
