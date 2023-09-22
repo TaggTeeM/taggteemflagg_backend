@@ -2,10 +2,10 @@ import { Client, TravelMode, UnitSystem } from "@googlemaps/google-maps-services
 import { Request, Response } from 'express';
 import { DataSource } from "typeorm";
 
-import { MapCoordinate } from "../entities/MapCoordinate.js";
-import { ConfirmedBooking } from "../entities/ConfirmedBooking.js";
-import { User } from "../entities/User.js";
-import { ExtendedRequest } from "../interfaces/ExtendedRequest.js";
+import { MapCoordinate } from "../../entities/MapCoordinate.js";
+import { ConfirmedBooking } from "../../entities/ConfirmedBooking.js";
+import { User } from "../../entities/User.js";
+import { ExtendedRequest } from "../../interfaces/ExtendedRequest.js";
 
 const client = new Client({});
 

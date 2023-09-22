@@ -2,7 +2,7 @@ import { Client, TravelMode, UnitSystem } from "@googlemaps/google-maps-services
 import { Request, Response } from 'express';
 import { DataSource } from "typeorm";
 
-import { MapCoordinate } from "../entities/MapCoordinate.js";
+import { MapCoordinate } from "../../entities/MapCoordinate.js";
 
 const client = new Client({});
 

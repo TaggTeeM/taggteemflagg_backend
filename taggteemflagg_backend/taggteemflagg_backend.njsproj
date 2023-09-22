@@ -48,6 +48,11 @@
     <Folder Include="middleware\" />
     <Folder Include="migrations\" />
     <Folder Include="routes\" />
+    <Folder Include="routes\authentication\" />
+    <Folder Include="routes\booking\" />
+    <Folder Include="routes\driver\" />
+    <Folder Include="routes\driver\signup\" />
+    <Folder Include="routes\signup\" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="config\secrets.ts" />
@@ -68,15 +73,14 @@
     <TypeScriptCompile Include="middleware\ormConnectionSource.ts" />
     <TypeScriptCompile Include="middleware\rateLimiter.ts" />
     <TypeScriptCompile Include="middleware\validators.ts" />
-    <TypeScriptCompile Include="routes\authenticateToken.ts" />
-    <TypeScriptCompile Include="routes\confirmBooking.ts" />
-    <TypeScriptCompile Include="routes\driverSignup.ts" />
-    <TypeScriptCompile Include="routes\getPreferredDrivers.ts" />
-    <TypeScriptCompile Include="routes\getTripCostList.ts" />
-    <TypeScriptCompile Include="routes\signUp.ts" />
-    <TypeScriptCompile Include="routes\validateLogin.ts" />
-    <TypeScriptCompile Include="routes\validateOTP.ts" />
-    <TypeScriptCompile Include="routes\validatePhoneNumber.ts" />
+    <TypeScriptCompile Include="routes\authentication\authenticateToken.ts" />
+    <TypeScriptCompile Include="routes\booking\confirmBooking.ts" />
+    <TypeScriptCompile Include="routes\driver\signup\driverSignup.ts" />
+    <TypeScriptCompile Include="routes\booking\getPreferredDrivers.ts" />
+    <TypeScriptCompile Include="routes\booking\getTripCostList.ts" />
+    <TypeScriptCompile Include="routes\signup\signUp.ts" />
+    <TypeScriptCompile Include="routes\authentication\validateLogin.ts" />
+    <TypeScriptCompile Include="routes\authentication\validateOTP.ts" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />
   <ProjectExtensions>

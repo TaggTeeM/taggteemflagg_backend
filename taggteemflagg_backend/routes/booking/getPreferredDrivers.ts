@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 import { DataSource } from 'typeorm';
 
-import { PreferredDriver } from '../entities/PreferredDriver.js';
-import logger from "../middleware/logger.js";
+import { PreferredDriver } from '../../entities/PreferredDriver.js';
+import logger from "../../middleware/logger.js";
 
 export const getPreferredDrivers = async (req: Request, res: Response, connection: DataSource) => {
     try {

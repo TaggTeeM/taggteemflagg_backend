@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
 import { DataSource } from 'typeorm';
 
-import logger from "../middleware/logger.js"
+import logger from "../../middleware/logger.js"
 
-import { checkLoginType, isEmail } from '../middleware/validators.js';
-import { storeAndSendOtp } from '../middleware/oneTimePasswords.js';
-import { OTPType } from '../entities/OTPValidation.js';
+import { checkLoginType, isEmail } from '../../middleware/validators.js';
+import { storeAndSendOtp } from '../../middleware/oneTimePasswords.js';
+import { OTPType } from '../../entities/OTPValidation.js';
 
 export const validateLogin = async (req: Request, res: Response, connection: DataSource) => {
     logger.info("Validating login");

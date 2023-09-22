@@ -1,12 +1,12 @@
 import { Request, Response } from "express";
 import { DataSource } from "typeorm";
 
-import { User } from "../entities/User.js";
-import logger from "../middleware/logger.js";
-import { formatPhoneNumber } from "../middleware/formatters.js";
-import { checkLoginType } from '../middleware/validators.js';
-import { storeAndSendOtp } from '../middleware/oneTimePasswords.js';
-import { OTPType, OTPValidation } from "../entities/OTPValidation.js";
+import { User } from "../../entities/User.js";
+import logger from "../../middleware/logger.js";
+import { formatPhoneNumber } from "../../middleware/formatters.js";
+import { checkLoginType } from '../../middleware/validators.js';
+import { storeAndSendOtp } from '../../middleware/oneTimePasswords.js';
+import { OTPType, OTPValidation } from "../../entities/OTPValidation.js";
 
 export const signUp = async (req: Request, res: Response, connection: DataSource) => {
   logger.info("New sign up");

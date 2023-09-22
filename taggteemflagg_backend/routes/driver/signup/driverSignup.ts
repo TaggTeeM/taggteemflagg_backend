@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 import { DataSource } from 'typeorm';
 
-import { Driver } from '../entities/Driver.js';
-import logger from "../middleware/logger.js";
-import { ExtendedRequest } from '../interfaces/ExtendedRequest.js';
+import { Driver } from '../../../entities/Driver.js';
+import logger from "../../../middleware/logger.js";
+import { ExtendedRequest } from '../../../interfaces/ExtendedRequest.js';
 
 export const driverSignup = async (req: ExtendedRequest, res: Response, connection: DataSource) => {
     try {

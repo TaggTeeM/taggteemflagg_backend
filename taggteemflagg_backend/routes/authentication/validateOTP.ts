@@ -2,12 +2,12 @@ import { Request, Response } from 'express';
 import { DataSource, MoreThan } from 'typeorm';
 import jwt from 'jsonwebtoken';
 
-import { User } from '../entities/User.js';  // Import the User entity
-import logger from "../middleware/logger.js"
-import { OTPType, OTPValidation } from '../entities/OTPValidation.js';
-import { checkLoginType, isEmail } from '../middleware/validators.js';
+import { User } from '../../entities/User.js';  // Import the User entity
+import logger from "../../middleware/logger.js"
+import { OTPType, OTPValidation } from '../../entities/OTPValidation.js';
+import { checkLoginType, isEmail } from '../../middleware/validators.js';
 
-import { JWT_SECRET } from '../config/secrets.js';
+import { JWT_SECRET } from '../../config/secrets.js';
 
 export const validateOTP = async (req: Request, res: Response, connection: DataSource) => {
     logger.info("Validating OTP");

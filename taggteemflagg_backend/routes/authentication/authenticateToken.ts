@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { DataSource } from 'typeorm';
 
-import logger from "../middleware/logger.js";
+import logger from "../../middleware/logger.js";
 
 export const authenticateToken = async (res: Response) => {
     try {

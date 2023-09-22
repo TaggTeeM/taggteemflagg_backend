@@ -5,18 +5,18 @@ console.log(process.env);
 
 import express from 'express';
 
-import { validateLogin } from './routes/validateLogin.js';
-import { validateOTP } from './routes/validateOTP.js';
-import { signUp } from "./routes/signUp.js";
-import { getPreferredDrivers } from "./routes/getPreferredDrivers.js";
-import { driverSignup } from "./routes/driverSignup.js";
-import { tripCostList } from "./routes/getTripCostList.js"
+import { validateLogin } from './routes/authentication/validateLogin.js';
+import { validateOTP } from './routes/authentication/validateOTP.js';
+import { signUp } from "./routes/signup/signUp.js";
+import { getPreferredDrivers } from "./routes/booking/getPreferredDrivers.js";
+import { driverSignup } from "./routes/driver/signup/driverSignup.js";
+import { tripCostList } from "./routes/booking/getTripCostList.js"
 import { ThreeSecondLimiter, TenSecondLimiter } from "./middleware/rateLimiter.js";
 import logger from './middleware/logger.js';
 import { OrmConnectionSource } from './middleware/ormConnectionSource.js';
-import confirmBooking from './routes/confirmBooking.js';
+import confirmBooking from './routes/booking/confirmBooking.js';
 import { authenticateJWT } from './middleware/authenticateJWT.js';
-import { authenticateToken } from './routes/authenticateToken.js';
+import { authenticateToken } from './routes/authentication/authenticateToken.js';
 
 const app = express();
 app.use(express.json());
