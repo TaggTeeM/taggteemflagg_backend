@@ -89,7 +89,6 @@ export const confirmBooking = async (req: ExtendedRequest, res: Response, connec
         const duration = response.data.rows[0].elements[0].duration.value;
 
         // save the confirmed booking
-        debugger;
 
         confirmedBooking.sourceCoordinate = sourceCoordinate;
         confirmedBooking.destinationCoordinate = destinationCoordinate;
@@ -103,7 +102,7 @@ export const confirmBooking = async (req: ExtendedRequest, res: Response, connec
         const confirmedBookingRepository = connection.getRepository(ConfirmedBooking);
         const confirmedBookingWritten = await confirmedBookingRepository.save(confirmedBooking);
 
-        return res.json({ });
+        return res.json({ confirmedBookingWritten });
     } catch (err) {
         debugger;
         return res.status(500).json({ message: "Error fetching directions.", success: false, error: err });

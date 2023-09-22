@@ -8,12 +8,18 @@ import { JWT_SECRET } from '../config/secrets.js';
 export const authenticateJWT = (req: ExtendedRequest, res: Response, next: Function) => {
     console.log("Calling authenticateJWT");
 
-    const token = req.header('Authorization');
+    const authHeader = req.header('Authorization');
 
-    console.log("AUTH: " + token);
+    if (!authHeader) {
+        return res.sendStatus(401); // Unauthorized
+    }
+
+    console.log("AUTH: " + authHeader);
+
+    const token = authHeader.split(" ")[1];
     
     if (token) {
-        jwt.verify(token.split(" ")[1], JWT_SECRET, (err, user) => {
+        jwt.verify(token, JWT_SECRET, (err, user) => {
             if (err) {
                 if (err.name == "TokenExpiredError")
                     return res.sendStatus(403); // Forbidden when expired
@@ -21,7 +27,7 @@ export const authenticateJWT = (req: ExtendedRequest, res: Response, next: Funct
                     return res.sendStatus(401); // Unauthorized when invalid
             }
 
-            req.phoneNumber = (user as ExtendedJwtPayload)!.phoneNumber
+            req.phoneNumber = (user as ExtendedJwtPayload)!.phoneNumber;
 
             console.log("  FOUND: " + req.phoneNumber);
 
